@@ -10,7 +10,7 @@ namespace WPFCopyApp.ViewModels
 {
     class TestViewModel:ViewModelBase
     {
-        private string _label1;
+        private string _label1 = "Label before change";
 
         public string label1
         {

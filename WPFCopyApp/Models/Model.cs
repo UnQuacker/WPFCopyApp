@@ -9,7 +9,7 @@ namespace WPFCopyApp.Models
 {
     public class Model
     {
-        private string _label1;
+        private string _label1 = "Label before change";
         private string _label2;
         public string label1 {
             get
