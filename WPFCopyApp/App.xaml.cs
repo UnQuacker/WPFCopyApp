@@ -18,8 +18,9 @@ namespace WPFCopyApp
         {
             MainWindow = new MainWindow()
             {
-                DataContext = new TestViewModel()
+                DataContext = new ViewModel()
             };
+
             MainWindow.Show();
 
             base.OnStartup(e);

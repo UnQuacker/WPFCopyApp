@@ -13,7 +13,7 @@ namespace WPFCopyApp.Commands
 
         public virtual bool CanExecute(object parameter)
         {
-            return true;  // for now
+            return true;  
         }
 
         public abstract void Execute(object parameter);

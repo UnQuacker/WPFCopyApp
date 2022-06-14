@@ -11,21 +11,21 @@ namespace WPFCopyApp.Models
 {
     public class Model
     {
-        public string label="Label before change";
+        public string label="Label before the change";
 
         public Model()
         {
         }
 
-        public void changeLabel(TestViewModel testViewModel, string newLabel)
+        public void changeLabel(ViewModel ViewModel, string newLabel)
         {
-            testViewModel.label1 = newLabel;
+            ViewModel.label = newLabel;
         }
 
-        public void Copy(TestViewModel testViewModel)
+        public void Copy(ViewModel testViewModel)
         {
 
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Thread1.txt";
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Thread.txt";
             try
             {
                 using (StreamWriter sw = File.AppendText(path))

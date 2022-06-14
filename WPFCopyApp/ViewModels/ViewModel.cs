@@ -9,10 +9,13 @@ using WPFCopyApp.Models;
 
 namespace WPFCopyApp.ViewModels
 {
-    public class TestViewModel : ViewModelBase
+    public class ViewModel : ViewModelBase
     {
         private  Model model;
         private int _progressbar = 0;
+        public ICommand ChangeLabel { get; }
+        public ICommand CopyCommand { get; }
+
         public int progressbar
         {
             get 
@@ -29,11 +32,7 @@ namespace WPFCopyApp.ViewModels
             }
         }
 
-        public void moveProgressBar()
-        {
-            model.Copy(this);
-        }
-        public string label1
+        public string label
         {
             get
             {
@@ -42,19 +41,26 @@ namespace WPFCopyApp.ViewModels
             set
             {
                 model.label = value;
-                OnPropertyChanged(nameof(label1));
+                OnPropertyChanged(nameof(label));
             }
         }
-        public ICommand TestCommand { get; }
-
-        public TestViewModel()
+        
+        public ViewModel()
         {
             model = new Model();
-            TestCommand = new TestCommand(this, obj =>
+            ChangeLabel = new TestCommand(this, obj =>
             {
                 changeLabel("Label after the change");
-                moveProgressBar();
             });
+            CopyCommand = new TestCommand(this, obj =>
+            {
+                Copy();
+            });
+        }
+
+        public void Copy()
+        {
+            model.Copy(this);
         }
 
         public void changeLabel(string newLabel)
