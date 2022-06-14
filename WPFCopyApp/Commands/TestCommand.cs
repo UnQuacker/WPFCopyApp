@@ -8,18 +8,19 @@ using WPFCopyApp.ViewModels;
 
 namespace WPFCopyApp.Commands
 {
-    class TestCommand : CommandBase
+    public class TestCommand : CommandBase
     {
+        Action<object> execteMethod;
 
         private readonly TestViewModel testViewModel;
         public override void Execute(object parameter)
         {
-            testViewModel.label1 = "Label after change";
-            testViewModel.moveProgressBar();
+            execteMethod(parameter);
         }
 
-        public TestCommand(TestViewModel testViewModel)
+        public TestCommand(TestViewModel testViewModel, Action<object> execteMethod)
         {
+            this.execteMethod = execteMethod;
             this.testViewModel = testViewModel;
         }
 

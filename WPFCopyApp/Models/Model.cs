@@ -17,6 +17,11 @@ namespace WPFCopyApp.Models
         {
         }
 
+        public void changeLabel(TestViewModel testViewModel, string newLabel)
+        {
+            testViewModel.label1 = newLabel;
+        }
+
         public void Copy(TestViewModel testViewModel)
         {
 

@@ -9,7 +9,7 @@ using WPFCopyApp.Models;
 
 namespace WPFCopyApp.ViewModels
 {
-    public class TestViewModel:ViewModelBase
+    public class TestViewModel : ViewModelBase
     {
         private  Model model;
         private int _progressbar = 0;
@@ -50,7 +50,16 @@ namespace WPFCopyApp.ViewModels
         public TestViewModel()
         {
             model = new Model();
-            TestCommand = new TestCommand(this);
+            TestCommand = new TestCommand(this, obj =>
+            {
+                changeLabel("Label after the change");
+                moveProgressBar();
+            });
+        }
+
+        public void changeLabel(string newLabel)
+        {
+            model.changeLabel(this, newLabel);
         }
     }
 }
