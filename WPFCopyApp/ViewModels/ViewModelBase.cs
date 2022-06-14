@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace WPFCopyApp.ViewModels
 {
-    class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
     {
 
 

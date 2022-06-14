@@ -10,18 +10,19 @@ namespace WPFCopyApp.Commands
 {
     class TestCommand : CommandBase
     {
-        private readonly string label1;
+
         private readonly TestViewModel testViewModel;
         public override void Execute(object parameter)
         {
             testViewModel.label1 = "Label after change";
+            testViewModel.moveProgressBar();
         }
 
-        public TestCommand(TestViewModel testViewModel, string label1)
+        public TestCommand(TestViewModel testViewModel)
         {
-            this.label1 = label1;
             this.testViewModel = testViewModel;
         }
+
     }
 
     
