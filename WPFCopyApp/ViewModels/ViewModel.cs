@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -72,10 +73,10 @@ namespace WPFCopyApp.ViewModels
 
         public ICommand ChangeLabel1 { get; }
         public ICommand ChangeLabel2 { get; }
-        public ICommand CopyCommand { get; }
+        public ICommand WriteLaggyCommand { get; }
         public ICommand WriteThreadCommand { get; }
         public ICommand WriteAsyncCommand { get; }
-
+        public ICommand CopyCommand { get; }
         
         
         public ViewModel()
@@ -97,9 +98,9 @@ namespace WPFCopyApp.ViewModels
             }, (obj) => Whichlabel
             );
 
-            CopyCommand = new RelayCommand(obj =>
+            WriteLaggyCommand = new RelayCommand(obj =>
             {
-                Copy();
+                WriteToFileLaggy();
             }, (obj)=> !isRunning
             );
 
@@ -114,11 +115,17 @@ namespace WPFCopyApp.ViewModels
                 WriteAsync();
             }, (obj) => !isRunning
             );
+
+            CopyCommand = new RelayCommand(obj =>
+            {
+                Copy();
+            }, (obj) => !isRunning
+            );
         }
 
-        public void Copy()
+        public void WriteToFileLaggy()
         {
-            model.LaggyCopy(this);
+            model.WriteToFileLaggy(this);
         }
 
         public void ChangeLabel(string newLabel)
@@ -157,6 +164,15 @@ namespace WPFCopyApp.ViewModels
         public void WriteAsync()
         {
             model.WritetoFileAsync(this);
+        }
+
+        public void Copy()
+        {
+            string source = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Thread.txt";
+            string destination = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Thread3.txt";
+
+            Thread thread = new(() => model.Copy(this));
+            thread.Start();
         }
 
         //private void myModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

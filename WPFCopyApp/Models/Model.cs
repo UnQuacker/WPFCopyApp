@@ -10,16 +10,18 @@ using System.Threading;
 using System.Windows.Threading;
 using System.Windows.Input;
 using System.Runtime.CompilerServices;
+using Microsoft.Win32;
+using System.Windows;
 
 namespace WPFCopyApp.Models
 {
-    public class Model: INotifyPropertyChanged
+    public class Model : INotifyPropertyChanged
     {
-        private string _label="Label before the change";
+        private string _label = "Label before the change";
         public string label
         {
             get { return _label; }
-            set 
+            set
             {
                 _label = value;
                 OnPropertyChanged(nameof(label));
@@ -50,7 +52,7 @@ namespace WPFCopyApp.Models
         //    label = newLabel;
         //}
 
-        public void LaggyCopy(ViewModel testViewModel)
+        public void WriteToFileLaggy(ViewModel testViewModel)
         {
 
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Thread.txt";
@@ -138,8 +140,74 @@ namespace WPFCopyApp.Models
                 }
                 testViewModel.isRunning = false;
                 OnPropertyChanged(nameof(testViewModel.isRunning));
+
             });
 
+        }
+
+        public delegate void ProgressChangeDelegate(double Percentage);
+        public delegate void Completedelegate();
+
+        public event ProgressChangeDelegate OnProgressChanged;
+        public event Completedelegate OnComplete;
+
+        public void Copy(ViewModel viewModel)
+        {
+            OnProgressChanged += delegate { };
+            OnComplete += delegate {
+                string messageBoxText = "A file has been copied succesfully";
+                string caption = "Notification";
+                MessageBoxButton button = MessageBoxButton.OK;
+                MessageBoxImage icon = MessageBoxImage.Information;
+                MessageBoxResult result;
+                result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+            };
+
+            byte[] buffer = new byte[1024 * 1024];
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() != true) { return; }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            if (saveFileDialog.ShowDialog() != true) { return; }
+
+            if (File.Exists(saveFileDialog.FileName))
+            {
+                File.Delete(saveFileDialog.FileName);
+            }
+
+            using (FileStream source = new FileStream(openFileDialog.FileName, FileMode.Open, FileAccess.Read))
+            {
+                viewModel.progressbar = 0;
+                long fileLength = source.Length;
+                using (FileStream dest = new FileStream(saveFileDialog.FileName, FileMode.CreateNew, FileAccess.Write))
+                {
+                    long totalBytes = 0;
+                    int currentBlockSize = 0;
+
+                    while ((currentBlockSize = source.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        totalBytes += currentBlockSize;
+                        double percentage = (double)totalBytes * 100.0 / fileLength;
+
+                        dest.Write(buffer, 0, currentBlockSize);
+                        Thread.Sleep(50);
+
+                        OnProgressChanged(percentage);
+                        if (viewModel.progressbar + (int)percentage > 100)
+                        {
+                            viewModel.progressbar = 100;
+                        }
+                        else
+                        {
+                            viewModel.progressbar += (int)percentage;
+                        }
+
+                    }
+                }
+            }
+
+            OnComplete();
         }
     }
 }
