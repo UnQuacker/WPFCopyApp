@@ -81,25 +81,25 @@ namespace WPFCopyApp.ViewModels
 
             ChangeLabel1 = new RelayCommand(obj =>
             {
-                changeLabel("Button 1 was pressed");
-            }, (object param)=> { return !Whichlabel; }
+                ChangeLabel("Button 1 was pressed");
+            }, (obj)=> { return !Whichlabel; }
             );
 
             ChangeLabel2 = new RelayCommand(obj =>
             {
-                changeLabel("Button 2 was pressed");
-            }, (object param) => { return Whichlabel; }
+                ChangeLabel("Button 2 was pressed");
+            }, (obj) => { return Whichlabel; }
             );
 
             CopyCommand = new RelayCommand(obj =>
             {
                 Copy();
-            }, (object param)=> { return !isRunning; });
+            }, (obj)=> { return !isRunning; });
 
             WirteThread = new RelayCommand(obj =>
             {
-                writeThread();
-            }, (object param) => { return !isRunning; });
+                WriteThread();
+            }, (ob) => { return !isRunning; });
         }
 
         public void Copy()
@@ -107,23 +107,23 @@ namespace WPFCopyApp.ViewModels
             model.LaggyCopy(this);
         }
 
-        public void changeLabel(string newLabel)
+        public void ChangeLabel(string newLabel)
         {
             if (!Whichlabel)
             {
-                model.changeLabel(this, newLabel);
+                model.ChangeLabel(this, newLabel);
                 Whichlabel = true;
             }
             else
             {
-                model.changeLabel(this, newLabel);
+                model.ChangeLabel(this, newLabel);
                 Whichlabel = false;
             }
         }
 
-        public void writeThread()
+        public void WriteThread()
         {
-            Thread thread = new Thread(() => model.writeToFileThread1(this));
+            Thread thread = new(() => model.WriteToFileThread1(this));
             thread.Start();
         }
     }

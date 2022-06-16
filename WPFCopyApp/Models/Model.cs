@@ -22,7 +22,7 @@ namespace WPFCopyApp.Models
         {
         }
 
-        public void changeLabel(ViewModel ViewModel, string newLabel)
+        public void ChangeLabel(ViewModel ViewModel, string newLabel)
         {
             isRunning = true;
             ViewModel.label = newLabel;
@@ -53,7 +53,7 @@ namespace WPFCopyApp.Models
                 }
             }
 
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -61,7 +61,7 @@ namespace WPFCopyApp.Models
             isRunning = false;
 
         }
-        public void writeToFileThread1(ViewModel testViewModel)
+        public void WriteToFileThread1(ViewModel testViewModel)
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Thread1.txt";
             try
@@ -82,7 +82,7 @@ namespace WPFCopyApp.Models
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
