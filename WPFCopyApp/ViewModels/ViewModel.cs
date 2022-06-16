@@ -41,19 +41,14 @@ namespace WPFCopyApp.ViewModels
 
         }
 
-        public ICommand ChangeLabel1 { get; }
-        public ICommand ChangeLabel2 { get; }
-        public ICommand CopyCommand { get; }
-        public ICommand WirteThread { get; }
-
         public int progressbar
         {
-            get 
+            get
             {
                 return _progressbar;
             }
             set
-            {   
+            {
                 if (_progressbar != value)
                 {
                     _progressbar = value;
@@ -74,32 +69,51 @@ namespace WPFCopyApp.ViewModels
                 OnPropertyChanged(nameof(label));
             }
         }
+
+        public ICommand ChangeLabel1 { get; }
+        public ICommand ChangeLabel2 { get; }
+        public ICommand CopyCommand { get; }
+        public ICommand WriteThreadCommand { get; }
+        public ICommand WriteAsyncCommand { get; }
+
+        
         
         public ViewModel()
         {
             model = new Model();
+            //model.PropertyChanged += myModel_PropertyChanged; 
+            // ломает функционал кнопок Change Label
 
             ChangeLabel1 = new RelayCommand(obj =>
             {
                 ChangeLabel("Button 1 was pressed");
-            }, (obj)=> { return !Whichlabel; }
+            }, (obj)=> !Whichlabel
             );
 
             ChangeLabel2 = new RelayCommand(obj =>
             {
                 ChangeLabel("Button 2 was pressed");
-            }, (obj) => { return Whichlabel; }
+                //testChangeLabel("Button 2 was pressed");
+            }, (obj) => Whichlabel
             );
 
             CopyCommand = new RelayCommand(obj =>
             {
                 Copy();
-            }, (obj)=> { return !isRunning; });
+            }, (obj)=> !isRunning
+            );
 
-            WirteThread = new RelayCommand(obj =>
+            WriteThreadCommand = new RelayCommand(obj =>
             {
                 WriteThread();
-            }, (ob) => { return !isRunning; });
+            }, (obj) => !isRunning
+            );
+
+            WriteAsyncCommand = new RelayCommand(obj =>
+            {
+                WriteAsync();
+            }, (obj) => !isRunning
+            );
         }
 
         public void Copy()
@@ -120,11 +134,49 @@ namespace WPFCopyApp.ViewModels
                 Whichlabel = false;
             }
         }
+        //public void testChangeLabel(string newLabel)
+        //{
+        //    if (!Whichlabel)
+        //    {
+        //        model.testLabelChange(newLabel);
+        //        Whichlabel = true;
+        //    }
+        //    else
+        //    {
+        //        model.testLabelChange(newLabel);
+        //        Whichlabel = false;
+        //    }
+        //}
 
         public void WriteThread()
         {
             Thread thread = new(() => model.WriteToFileThread1(this));
             thread.Start();
         }
+
+        public void WriteAsync()
+        {
+            model.WritetoFileAsync(this);
+        }
+
+        //private void myModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        //{
+        //    if (e.PropertyName == "label")
+        //    {
+        //        ChangeLabel2.CanExecuteChanged += ChangeLabel2_CanExecuteChanged;
+        //    }
+        //    else if (e.PropertyName == "progressbar")
+        //    {
+        //        progressbar = model.progressbar;
+        //    }
+        //}
+
+        //private void ChangeLabel2_CanExecuteChanged(object sender, EventArgs e)
+        //{
+        //    if(e.ToString() == "label")
+        //    {
+
+        //    }
+        //}
     }
 }

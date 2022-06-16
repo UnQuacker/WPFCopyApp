@@ -9,25 +9,46 @@ using WPFCopyApp.ViewModels;
 using System.Threading;
 using System.Windows.Threading;
 using System.Windows.Input;
+using System.Runtime.CompilerServices;
 
 namespace WPFCopyApp.Models
 {
-    public class Model
+    public class Model: INotifyPropertyChanged
     {
-        public string label="Label before the change";
+        private string _label="Label before the change";
+        public string label
+        {
+            get { return _label; }
+            set 
+            {
+                _label = value;
+                OnPropertyChanged(nameof(label));
+            }
+        }
 
         public bool isRunning = false;
         public bool Whichlabel = false;
+        public int progressbar;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public Model()
         {
         }
 
         public void ChangeLabel(ViewModel ViewModel, string newLabel)
         {
-            isRunning = true;
             ViewModel.label = newLabel;
-            isRunning = false;
         }
+        //public void testLabelChange(string newLabel)
+        //{
+        //    label = newLabel;
+        //}
 
         public void LaggyCopy(ViewModel testViewModel)
         {
@@ -59,6 +80,7 @@ namespace WPFCopyApp.Models
             }
 
             isRunning = false;
+            OnPropertyChanged(nameof(testViewModel.isRunning));
 
         }
         public void WriteToFileThread1(ViewModel testViewModel)
@@ -87,6 +109,37 @@ namespace WPFCopyApp.Models
 
             }
             testViewModel.isRunning = false;
+            OnPropertyChanged(nameof(testViewModel.isRunning));
+        }
+        async public void WritetoFileAsync(ViewModel testViewModel)
+        {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Thread2.txt";
+            await Task.Run(() =>
+            {
+                try
+                {
+                    using (StreamWriter sw = File.AppendText(path))
+                    {
+                        testViewModel.isRunning = true;
+                        testViewModel.progressbar = 0;
+                        for (int i = 0; i < 40000000; i++)
+                        {
+                            sw.WriteLine(i.ToString());
+                            if (i % 400000 == 0)
+                            {
+                                testViewModel.progressbar++;
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+                testViewModel.isRunning = false;
+                OnPropertyChanged(nameof(testViewModel.isRunning));
+            });
+
         }
     }
 }
