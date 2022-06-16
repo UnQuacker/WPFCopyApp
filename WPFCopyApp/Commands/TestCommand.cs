@@ -12,16 +12,14 @@ namespace WPFCopyApp.Commands
     {
         Action<object> execteMethod;
 
-        private readonly ViewModel testViewModel;
         public override void Execute(object parameter)
         {
             execteMethod(parameter);
         }
 
-        public TestCommand(ViewModel testViewModel, Action<object> execteMethod)
+        public TestCommand(Action<object> execteMethod)
         {
             this.execteMethod = execteMethod;
-            this.testViewModel = testViewModel;
         }
 
     }
