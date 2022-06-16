@@ -123,7 +123,6 @@ namespace WPFCopyApp.ViewModels
 
         public void writeThread()
         {
-            isRunning = true;
             Thread thread = new Thread(() => model.writeToFileThread1(this));
             thread.Start();
         }

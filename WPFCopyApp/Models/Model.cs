@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WPFCopyApp.ViewModels;
 using System.Threading;
+using System.Windows.Threading;
+using System.Windows.Input;
 
 namespace WPFCopyApp.Models
 {
@@ -64,6 +66,7 @@ namespace WPFCopyApp.Models
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Thread1.txt";
             try
             {
+                testViewModel.isRunning = true;
                 using (StreamWriter sw = File.AppendText(path))
                 {
                     testViewModel.progressbar = 0;
