@@ -22,7 +22,7 @@ namespace WPFCopyApp.Models
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "txt files (*.txt)|*.txt";
             if (openFileDialog.ShowDialog() != true) { return; }
-
+            fileReaderViewModel.test = openFileDialog.FileName;
             fileReaderViewModel.content = File.ReadAllText(openFileDialog.FileName);
 
         }

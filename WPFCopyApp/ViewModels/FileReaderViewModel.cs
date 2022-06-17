@@ -13,7 +13,7 @@ namespace WPFCopyApp.ViewModels
     public class FileReaderViewModel:ViewModelBase
     {
         private NavigationStore _navigationStore;
-        private string _test = "Quack-quack";
+        private string _test;
         private FileReaderModel fileReaderModel;
         public string test
         {
