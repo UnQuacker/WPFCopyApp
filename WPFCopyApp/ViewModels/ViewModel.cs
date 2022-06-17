@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using WPFCopyApp.Commands;
 using WPFCopyApp.Models;
+using WPFCopyApp.Stores;
 
 namespace WPFCopyApp.ViewModels
 {
@@ -15,6 +16,7 @@ namespace WPFCopyApp.ViewModels
     {
         private  Model model;
         private int _progressbar = 0;
+        private NavigationStore _navigationStore;
         public bool isRunning
         {
             get
@@ -77,14 +79,13 @@ namespace WPFCopyApp.ViewModels
         public ICommand WriteThreadCommand { get; }
         public ICommand WriteAsyncCommand { get; }
         public ICommand CopyCommand { get; }
+        public ICommand NavigateCommand { get; }
         
         
-        public ViewModel()
+        public ViewModel(NavigationStore navigationStore)
         {
             model = new Model();
-            //model.PropertyChanged += myModel_PropertyChanged; 
-            // ломает функционал кнопок Change Label
-
+            _navigationStore = navigationStore;
             ChangeLabel1 = new RelayCommand(obj =>
             {
                 ChangeLabel("Button 1 was pressed");
@@ -121,14 +122,22 @@ namespace WPFCopyApp.ViewModels
                 Copy();
             }, (obj) => !isRunning
             );
+
+            NavigateCommand = new RelayCommand(obj =>
+            {
+                Navigate();
+            }, (obj) => !isRunning
+            );
+
+
         }
 
-        public void WriteToFileLaggy()
+        private void WriteToFileLaggy()
         {
             model.WriteToFileLaggy(this);
         }
 
-        public void ChangeLabel(string newLabel)
+        private void ChangeLabel(string newLabel)
         {
             if (!Whichlabel)
             {
@@ -141,32 +150,19 @@ namespace WPFCopyApp.ViewModels
                 Whichlabel = false;
             }
         }
-        //public void testChangeLabel(string newLabel)
-        //{
-        //    if (!Whichlabel)
-        //    {
-        //        model.testLabelChange(newLabel);
-        //        Whichlabel = true;
-        //    }
-        //    else
-        //    {
-        //        model.testLabelChange(newLabel);
-        //        Whichlabel = false;
-        //    }
-        //}
 
-        public void WriteThread()
+        private void WriteThread()
         {
             Thread thread = new(() => model.WriteToFileThread1(this));
             thread.Start();
         }
 
-        public void WriteAsync()
+        private void WriteAsync()
         {
             model.WritetoFileAsync(this);
         }
 
-        public void Copy()
+        private void Copy()
         {
             string source = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Thread.txt";
             string destination = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Thread3.txt";
@@ -175,24 +171,10 @@ namespace WPFCopyApp.ViewModels
             thread.Start();
         }
 
-        //private void myModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        //{
-        //    if (e.PropertyName == "label")
-        //    {
-        //        ChangeLabel2.CanExecuteChanged += ChangeLabel2_CanExecuteChanged;
-        //    }
-        //    else if (e.PropertyName == "progressbar")
-        //    {
-        //        progressbar = model.progressbar;
-        //    }
-        //}
+        private void Navigate()
+        {
+            _navigationStore.CurrentViewModel = new FileReaderViewModel(_navigationStore);
+        }
 
-        //private void ChangeLabel2_CanExecuteChanged(object sender, EventArgs e)
-        //{
-        //    if(e.ToString() == "label")
-        //    {
-
-        //    }
-        //}
     }
 }

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using WPFCopyApp.Stores;
 using WPFCopyApp.ViewModels;
 
 namespace WPFCopyApp
@@ -14,11 +15,19 @@ namespace WPFCopyApp
     /// </summary>
     public partial class App : Application
     {
+        private readonly NavigationStore navigationStore;
+
+        public App()
+        {
+            navigationStore = new NavigationStore();
+        }
         protected override void OnStartup(StartupEventArgs e)
         {
+            navigationStore.CurrentViewModel = new ViewModel(navigationStore);
+
             MainWindow = new MainWindow()
             {
-                DataContext = new ViewModel()
+                DataContext = new MainViewModel(navigationStore)
             };
 
             MainWindow.Show();
